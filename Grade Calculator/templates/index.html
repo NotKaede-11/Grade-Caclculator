@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grade Calculator</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/styles.css') }}?v=1.1"
+    />
+  </head>
+  <body>
+    <h1>Grade Calculator</h1>
+    <form method="POST">
+      <label for="prelim_grade">Enter your Prelim grade:</label>
+      <input type="text" id="prelim_grade" name="prelim_grade" required />
+      <input type="submit" value="Calculate" />
+    </form>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="result">
+      {% for message in messages %}
+      <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+  </body>
+</html>
+
