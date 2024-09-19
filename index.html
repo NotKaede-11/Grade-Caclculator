@@ -85,6 +85,7 @@
     <!-- Include PyScript -->
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <link rel="icon" href="images/calculator.png" type="image/png" sizes="96x96"/>
 </head>
 
 <body>
@@ -126,7 +127,7 @@ def calculate_grades(event):
             required_midterm = remaining_for_midterm_final / max_midterm_final
             required_final = required_midterm 
 
-            result = f"To pass the course with an overall grade of 75, you need at least:<br>"
+            result = f"If your prelim grade is {prelim_grade:.2f} and you want to pass the course with an overall grade of 75, you need at least:<br><br>"
             result += f"Midterm grade: {required_midterm:.2f}<br>"
             result += f"Final grade: {required_final:.2f}<br><br>"
 
@@ -137,7 +138,7 @@ def calculate_grades(event):
             if required_midterm1 > 100 or required_final1 > 100:
                 result += "Sorry, but it is not possible for you to achieve Dean's lister at all even if you ace your midterms and finals. Better luck next time."
             elif prelim_contribution + max_midterm_final * 100 >= 90:
-                result += "Congratulations! You've qualified for Dean's lister.<br>"
+                result += "Congratulations! You've qualified for Dean's lister.<br><br>"
                 result += f"Now, you only need to have a midterm grade of {required_midterm1:.2f} and a final grade of {required_final1:.2f}"
             else:
                 result += "If you want to become a Dean's lister, you need at least:<br>"
