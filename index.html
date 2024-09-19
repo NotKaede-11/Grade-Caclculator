@@ -1,157 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grade Calculator</title>
     <style>
-      body {
-        font-family: Verdana, sans-serif;
-        background-color: #f5f5f5;
-        color: #333333;
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-      }
+        body {
+            font-family: Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-      h1 {
-        color: #6b5b95;
-        font-size: 36px;
-        text-align: center;
-        margin-bottom: 20px;
-      }
+        h1 {
+            color: #6b5b95;
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-      form {
-        background-color: #ffffff;
-        padding: 35px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
+        form {
+            background-color: #ffffff;
+            padding: 35px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-      label {
-        font-size: 18px;
-        color: #015d00;
-        display: block;
-        margin-bottom: 10px;
-      }
+        label {
+            font-size: 18px;
+            color: #015d00;
+            display: block;
+            margin-bottom: 10px;
+        }
 
-      input[type="text"] {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 2px solid #6b5b95;
-        border-radius: 5px;
-        font-size: 16px;
-        font-family: Verdana, sans-serif;
-      }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #6b5b95;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: Verdana, sans-serif;
+        }
 
-      input[type="submit"] {
-        background-color: #ff6f61;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        font-family: Verdana, sans-serif;
-        font-size: 18px;
-      }
+        input[type="submit"] {
+            background-color: #ff6f61;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-family: Verdana, sans-serif;
+            font-size: 18px;
+        }
 
-      input[type="submit"]:hover {
-        background-color: #ff8561;
-      }
+        input[type="submit"]:hover {
+            background-color: #ff8561;
+        }
 
-      .result {
-        background-color: #ffffff;
-        padding: 20px;
-        margin-top: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
+        .result {
+            background-color: #ffffff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-      .result p {
-        color: #015d00;
-        font-size: 18px;
-        line-height: 1.6;
-      }
+        .result p {
+            color: #015d00;
+            font-size: 18px;
+            line-height: 1.6;
+        }
 
-      .error {
-        color: red;
-        font-size: 18px;
-        margin-bottom: 20px;
-      }
+        .error {
+            color: red;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
     </style>
 
     <!-- Include PyScript -->
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-  </head>
+</head>
 
-  <body>
+<body>
     <h1>Grade Calculator</h1>
     <form id="gradeForm">
-      <label for="prelim_grade">Enter your Prelim grade:</label>
-      <input
-        type="text"
-        id="prelim_grade"
-        name="prelim_grade"
-        required
-        placeholder="Enter a number between 0 and 100"
-      />
-      <input type="submit" value="Calculate" />
+        <label for="prelim_grade">Enter your Prelim grade:</label>
+        <input
+            type="text"
+            id="prelim_grade"
+            name="prelim_grade"
+            required
+            placeholder="Enter a number between 0 and 100"
+        />
+        <input type="submit" value="Calculate" />
     </form>
 
     <div id="result" class="result" style="display: none"></div>
 
     <!-- PyScript for Grade Calculation -->
     <py-script>
-      def calculate_grades(prelim_grade):
-          prelim_contribution = 0.2 * prelim_grade
-          max_midterm_final = 0.3 + 0.5
+        def calculate_grades(prelim_grade):
+            prelim_contribution = 0.20 * prelim_grade
+            max_midterm_final = 0.30 + 0.50
 
-          if prelim_contribution + max_midterm_final * 100 < 75:
-              return ("Sorry, but it is impossible for you to pass the course with your current Prelim grade.", 0, 0, False)
-          else:
-              remaining_for_midterm_final = 75 - prelim_contribution
-              required_midterm = remaining_for_midterm_final / max_midterm_final
-              required_final = required_midterm
-              dean_status = prelim_contribution + max_midterm_final * 100 >= 90
-              return ("To pass the course with an overall grade of 75, you need:", required_midterm, required_final, dean_status)
+            if prelim_contribution + max_midterm_final * 100 < 75:
+                return "Sorry, but it is impossible for you to pass the course with your current Prelim grade."
+            else:
+                remaining_for_midterm_final = 75 - prelim_contribution
+                required_midterm = remaining_for_midterm_final / max_midterm_final
+                required_final = required_midterm 
+                
+                result = f"To pass the course with an overall grade of 75, you need at least:\n"
+                result += f"Midterm grade: {required_midterm:.2f}\n"
+                result += f"Final grade: {required_final:.2f}\n\n"
+                
+                remaining_for_midterm_final1 = 90 - prelim_contribution
+                required_midterm1 = remaining_for_midterm_final1 / max_midterm_final
+                required_final1 = required_midterm1 
 
-      def validate_input(value):
-          # Check if input is a number and between 0-100
-          try:
-              grade = float(value)
-              if 0 <= grade <= 100:
-                  return grade, None
-              else:
-                  return None, "Prelim grade must be between 0 and 100."
-          except ValueError:
-              return None, "Please enter a valid number."
+                if required_midterm1 > 100 or required_final1 > 100:
+                    result += "Sorry, but it is not possible for you to achieve Dean's lister at all even if you ace your midterms and finals. Better luck next time."
+                elif prelim_contribution + max_midterm_final * 100 >= 90:
+                    result += "Congratulations! You've qualified for Dean's lister.\n"
+                    result += f"Now, you only need to have a midterm grade of {required_midterm1:.2f} and a final grade of {required_final1:.2f}"
+                else:
+                    result += "If you want to become a Dean's lister, you need at least:\n"
+                    result += f"Midterm grade: {required_midterm1:.2f}\n"
+                    result += f"Final grade: {required_final1:.2f}"
+                
+                return result
 
-      def on_click(event):
-          event.preventDefault()
-          prelim_grade_input = Element("prelim_grade").value
-          grade, error_message = validate_input(prelim_grade_input)
-          
-          resultDiv = Element("result")
-          resultDiv.element.style.display = "block"
-          resultDiv.clear()
+        def validate_input(value):
+            try:
+                grade = float(value)
+                if 0 <= grade <= 100:
+                    return grade, None
+                else:
+                    return None, "Prelim grade must be between 0 and 100. Please try again."
+            except ValueError:
+                return None, "Invalid input. Please enter a numerical grade."
 
-          if error_message:
-              resultDiv.write(f"<p class='error'>{error_message}</p>")
-          else:
-              message, midterm_grade, final_grade, is_dean = calculate_grades(grade)
-              resultDiv.write(f"<p>{message}</p>")
-              if midterm_grade > 0 and final_grade > 0:
-                  resultDiv.write(f"<p>Midterm grade: {midterm_grade:.2f}</p>")
-                  resultDiv.write(f"<p>Final grade: {final_grade:.2f}</p>")
-              if is_dean:
-                  resultDiv.write(f"<p>Congratulations! You've qualified for Dean's lister.</p>")
-              else:
-                  resultDiv.write(f"<p>If you want to become a Dean's lister, you need to improve your midterm and final grades.</p>")
+        def on_click(event):
+            event.preventDefault()
+            prelim_grade_input = Element("prelim_grade").value
+            grade, error_message = validate_input(prelim_grade_input)
+            
+            resultDiv = Element("result")
+            resultDiv.element.style.display = "block"
+            resultDiv.clear()
 
-      Element("gradeForm").element.addEventListener("submit", on_click)
+            if error_message:
+                resultDiv.write(f"<p class='error'>{error_message}</p>")
+            else:
+                result = calculate_grades(grade)
+                resultDiv.write(f"<p>{result.replace('\n', '<br>')}</p>")
+
+        Element("gradeForm").element.addEventListener("submit", on_click)
     </py-script>
-  </body>
+</body>
 </html>
