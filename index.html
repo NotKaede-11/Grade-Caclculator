@@ -98,14 +98,15 @@
             required
             placeholder="Enter a number between 0 and 100"
         />
-        <input type="submit" value="Calculate" />
+        <input type="submit" value="Calculate" id="calculateButton" />
     </form>
 
     <div id="result" class="result" style="display: none"></div>
 
     <!-- PyScript for Grade Calculation -->
     <py-script>
-        def calculate_grades(event):
+def calculate_grades(event):
+    event.preventDefault()
     prelim_grade_str = Element('prelim_grade').element.value
 
     try:
@@ -143,13 +144,19 @@
                 result += f"Midterm grade: {required_midterm1:.2f}<br>"
                 result += f"Final grade: {required_final1:.2f}"
 
-        Element('result').element.innerHTML = result
+        result_element = Element('result')
+        result_element.element.innerHTML = result
+        result_element.element.style.display = "block"
 
     except ValueError as e:
-        Element('result').element.innerHTML = f'<span style="color: red;">{str(e)}</span>'
+        result_element = Element('result')
+        result_element.element.innerHTML = f'<span style="color: red;">{str(e)}</span>'
+        result_element.element.style.display = "block"
 
-Element('calculateButton').element.onclick = calculate_grades
+def setup():
+    Element('gradeForm').element.onsubmit = calculate_grades
 
+setup()
     </py-script>
 </body>
 </html>
