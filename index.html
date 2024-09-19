@@ -102,32 +102,44 @@
 
     <!-- PyScript for Grade Calculation -->
     <py-script>
-      def calculate_grades(prelim_grade): prelim_contribution = 0.2 *
-      prelim_grade max_midterm_final = 0.3 + 0.5 if prelim_contribution +
-      max_midterm_final * 100 < 75: return ("Sorry, but it is impossible for you
-      to pass the course with your current Prelim grade.", 0, 0, False) else:
-      remaining_for_midterm_final = 75 - prelim_contribution required_midterm =
-      remaining_for_midterm_final / max_midterm_final required_final =
-      required_midterm dean_status = prelim_contribution + max_midterm_final *
-      100 >= 90 return ("To pass the course with an overall grade of 75, you
-      need:", required_midterm, required_final, dean_status) def
-      on_click(event): prelim_grade = float(Element("prelim_grade").value)
-      resultDiv = Element("result") message, midterm_grade, final_grade, is_dean
-      = calculate_grades(prelim_grade) resultDiv.element.style.display = "block"
-      resultDiv.write(f"
-      <p>{message}</p>
-      ") if midterm_grade > 0 and final_grade > 0: resultDiv.write(f"
-      <p>Midterm grade: {midterm_grade:.2f}</p>
-      ") resultDiv.write(f"
-      <p>Final grade: {final_grade:.2f}</p>
-      ") if is_dean: resultDiv.write(f"
-      <p>Congratulations! You've qualified for Dean's lister.</p>
-      ") else: resultDiv.write(f"
-      <p>
-        If you want to become a Dean's lister, you need to improve your midterm
-        and final grades.
-      </p>
-      ") Element("gradeForm").element.addEventListener("submit", on_click)
+      def calculate_grades(prelim_grade):
+          prelim_contribution = 0.2 * prelim_grade
+          max_midterm_final = 0.3 + 0.5
+          
+          # Check if it's possible to pass
+          if prelim_contribution + max_midterm_final * 100 < 75:
+              return ("Sorry, but it is impossible for you to pass the course with your current Prelim grade.", 0, 0, False)
+          else:
+              remaining_for_midterm_final = 75 - prelim_contribution
+              required_midterm = remaining_for_midterm_final / max_midterm_final
+              required_final = required_midterm
+              dean_status = prelim_contribution + max_midterm_final * 100 >= 90
+              return ("To pass the course with an overall grade of 75, you need:", required_midterm, required_final, dean_status)
+
+      def on_click(event):
+          event.preventDefault()  # Prevent the form from submitting
+          
+          prelim_grade = float(Element("prelim_grade").value)
+          resultDiv = Element("result")
+          
+          # Call the grade calculation function
+          message, midterm_grade, final_grade, is_dean = calculate_grades(prelim_grade)
+          
+          # Display the results in the result div
+          resultDiv.element.style.display = "block"
+          resultDiv.write(f"<p>{message}</p>")
+          
+          if midterm_grade > 0 and final_grade > 0:
+              resultDiv.write(f"<p>Midterm grade: {midterm_grade:.2f}</p>")
+              resultDiv.write(f"<p>Final grade: {final_grade:.2f}</p>")
+              
+              if is_dean:
+                  resultDiv.write(f"<p>Congratulations! You've qualified for Dean's lister.</p>")
+              else:
+                  resultDiv.write(f"<p>If you want to become a Dean's lister, you need to improve your midterm and final grades.</p>")
+
+      # Add event listener to the form submission
+      Element("gradeForm").element.addEventListener("submit", on_click)
     </py-script>
   </body>
 </html>
