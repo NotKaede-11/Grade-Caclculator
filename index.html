@@ -105,63 +105,51 @@
 
     <!-- PyScript for Grade Calculation -->
     <py-script>
-        def calculate_grades(prelim_grade):
-            prelim_contribution = 0.20 * prelim_grade
-            max_midterm_final = 0.30 + 0.50
+        def calculate_grades(event):
+    prelim_grade_str = Element('prelim_grade').element.value
 
-            if prelim_contribution + max_midterm_final * 100 < 75:
-                return "Sorry, but it is impossible for you to pass the course with your current Prelim grade."
+    try:
+        prelim_grade = float(prelim_grade_str)
+        if prelim_grade < 0 or prelim_grade > 100:
+            raise ValueError("Prelim grade must be between 0 and 100.")
+
+        prelim_contribution = 0.20 * prelim_grade
+        max_midterm_final = 0.30 + 0.50
+
+        result = ""
+
+        if prelim_contribution + max_midterm_final * 100 < 75:
+            result = "Sorry, but it is impossible for you to pass the course with your current Prelim grade."
+        else:
+            remaining_for_midterm_final = 75 - prelim_contribution
+            required_midterm = remaining_for_midterm_final / max_midterm_final
+            required_final = required_midterm 
+
+            result = f"To pass the course with an overall grade of 75, you need at least:<br>"
+            result += f"Midterm grade: {required_midterm:.2f}<br>"
+            result += f"Final grade: {required_final:.2f}<br><br>"
+
+            remaining_for_midterm_final1 = 90 - prelim_contribution
+            required_midterm1 = remaining_for_midterm_final1 / max_midterm_final
+            required_final1 = required_midterm1 
+
+            if required_midterm1 > 100 or required_final1 > 100:
+                result += "Sorry, but it is not possible for you to achieve Dean's lister at all even if you ace your midterms and finals. Better luck next time."
+            elif prelim_contribution + max_midterm_final * 100 >= 90:
+                result += "Congratulations! You've qualified for Dean's lister.<br>"
+                result += f"Now, you only need to have a midterm grade of {required_midterm1:.2f} and a final grade of {required_final1:.2f}"
             else:
-                remaining_for_midterm_final = 75 - prelim_contribution
-                required_midterm = remaining_for_midterm_final / max_midterm_final
-                required_final = required_midterm 
-                
-                result = f"To pass the course with an overall grade of 75, you need at least:\n"
-                result += f"Midterm grade: {required_midterm:.2f}\n"
-                result += f"Final grade: {required_final:.2f}\n\n"
-                
-                remaining_for_midterm_final1 = 90 - prelim_contribution
-                required_midterm1 = remaining_for_midterm_final1 / max_midterm_final
-                required_final1 = required_midterm1 
+                result += "If you want to become a Dean's lister, you need at least:<br>"
+                result += f"Midterm grade: {required_midterm1:.2f}<br>"
+                result += f"Final grade: {required_final1:.2f}"
 
-                if required_midterm1 > 100 or required_final1 > 100:
-                    result += "Sorry, but it is not possible for you to achieve Dean's lister at all even if you ace your midterms and finals. Better luck next time."
-                elif prelim_contribution + max_midterm_final * 100 >= 90:
-                    result += "Congratulations! You've qualified for Dean's lister.\n"
-                    result += f"Now, you only need to have a midterm grade of {required_midterm1:.2f} and a final grade of {required_final1:.2f}"
-                else:
-                    result += "If you want to become a Dean's lister, you need at least:\n"
-                    result += f"Midterm grade: {required_midterm1:.2f}\n"
-                    result += f"Final grade: {required_final1:.2f}"
-                
-                return result
+        Element('result').element.innerHTML = result
 
-        def validate_input(value):
-            try:
-                grade = float(value)
-                if 0 <= grade <= 100:
-                    return grade, None
-                else:
-                    return None, "Prelim grade must be between 0 and 100. Please try again."
-            except ValueError:
-                return None, "Invalid input. Please enter a numerical grade."
+    except ValueError as e:
+        Element('result').element.innerHTML = f'<span style="color: red;">{str(e)}</span>'
 
-        def on_click(event):
-            event.preventDefault()
-            prelim_grade_input = Element("prelim_grade").value
-            grade, error_message = validate_input(prelim_grade_input)
-            
-            resultDiv = Element("result")
-            resultDiv.element.style.display = "block"
-            resultDiv.clear()
+Element('calculateButton').element.onclick = calculate_grades
 
-            if error_message:
-                resultDiv.write(f"<p class='error'>{error_message}</p>")
-            else:
-                result = calculate_grades(grade)
-                resultDiv.write(f"<p>{result.replace('\n', '<br>')}</p>")
-
-        Element("gradeForm").element.addEventListener("submit", on_click)
     </py-script>
 </body>
 </html>
