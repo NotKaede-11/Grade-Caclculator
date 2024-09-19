@@ -35,7 +35,7 @@
         margin-bottom: 10px;
       }
 
-      input[type="number"] {
+      input[type="text"] {
         width: 100%;
         padding: 10px;
         margin-bottom: 20px;
@@ -74,6 +74,12 @@
         font-size: 18px;
         line-height: 1.6;
       }
+
+      .error {
+        color: red;
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
     </style>
 
     <!-- Include PyScript -->
@@ -87,13 +93,11 @@
     <form id="gradeForm">
       <label for="prelim_grade">Enter your Prelim grade:</label>
       <input
-        type="number"
+        type="text"
         id="prelim_grade"
         name="prelim_grade"
         required
-        min="0"
-        max="100"
-        step="0.01"
+        placeholder="Enter a number between 0 and 100"
       />
       <input type="submit" value="Calculate" />
     </form>
@@ -105,8 +109,7 @@
       def calculate_grades(prelim_grade):
           prelim_contribution = 0.2 * prelim_grade
           max_midterm_final = 0.3 + 0.5
-          
-          # Check if it's possible to pass
+
           if prelim_contribution + max_midterm_final * 100 < 75:
               return ("Sorry, but it is impossible for you to pass the course with your current Prelim grade.", 0, 0, False)
           else:
@@ -116,29 +119,39 @@
               dean_status = prelim_contribution + max_midterm_final * 100 >= 90
               return ("To pass the course with an overall grade of 75, you need:", required_midterm, required_final, dean_status)
 
+      def validate_input(value):
+          # Check if input is a number and between 0-100
+          try:
+              grade = float(value)
+              if 0 <= grade <= 100:
+                  return grade, None
+              else:
+                  return None, "Prelim grade must be between 0 and 100."
+          except ValueError:
+              return None, "Please enter a valid number."
+
       def on_click(event):
-          event.preventDefault()  # Prevent the form from submitting
+          event.preventDefault()
+          prelim_grade_input = Element("prelim_grade").value
+          grade, error_message = validate_input(prelim_grade_input)
           
-          prelim_grade = float(Element("prelim_grade").value)
           resultDiv = Element("result")
-          
-          # Call the grade calculation function
-          message, midterm_grade, final_grade, is_dean = calculate_grades(prelim_grade)
-          
-          # Display the results in the result div
           resultDiv.element.style.display = "block"
-          resultDiv.write(f"<p>{message}</p>")
-          
-          if midterm_grade > 0 and final_grade > 0:
-              resultDiv.write(f"<p>Midterm grade: {midterm_grade:.2f}</p>")
-              resultDiv.write(f"<p>Final grade: {final_grade:.2f}</p>")
-              
+          resultDiv.clear()
+
+          if error_message:
+              resultDiv.write(f"<p class='error'>{error_message}</p>")
+          else:
+              message, midterm_grade, final_grade, is_dean = calculate_grades(grade)
+              resultDiv.write(f"<p>{message}</p>")
+              if midterm_grade > 0 and final_grade > 0:
+                  resultDiv.write(f"<p>Midterm grade: {midterm_grade:.2f}</p>")
+                  resultDiv.write(f"<p>Final grade: {final_grade:.2f}</p>")
               if is_dean:
                   resultDiv.write(f"<p>Congratulations! You've qualified for Dean's lister.</p>")
               else:
                   resultDiv.write(f"<p>If you want to become a Dean's lister, you need to improve your midterm and final grades.</p>")
 
-      # Add event listener to the form submission
       Element("gradeForm").element.addEventListener("submit", on_click)
     </py-script>
   </body>
