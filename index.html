@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grade Calculator</title>
+
+    <!-- Styles for page design -->
     <style>
         body {
             font-family: Verdana, sans-serif;
@@ -82,7 +84,7 @@
         }
     </style>
 
-    <!-- Include PyScript -->
+    <!-- Include PyScript library for running Python code in the browser -->
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
     <link rel="icon" href="images/calculator.png" type="image/png" sizes="96x96"/>
@@ -90,6 +92,8 @@
 
 <body>
     <h1>Grade Calculator</h1>
+
+    <!-- Form to collect Prelim grade input from the user -->
     <form id="gradeForm">
         <label for="prelim_grade">Enter your Prelim grade:</label>
         <input
@@ -102,64 +106,81 @@
         <input type="submit" value="Calculate" id="calculateButton" />
     </form>
 
+    <!-- Area where the result will be displayed after the form submission -->
     <div id="result" class="result" style="display: none"></div>
 
-    <!-- PyScript for Grade Calculation -->
+    <!-- PyScript section to handle grade calculations using Python -->
     <py-script>
+        # This function calculates the grades and handles user input when the form is submitted
         def calculate_grades(event):
-        event.preventDefault()
-        prelim_grade_str = Element('prelim_grade').element.value
-    
-        try:
-            prelim_grade = float(prelim_grade_str)
+            # Prevent the form from submitting and refreshing the page
+            event.preventDefault()
             
-            if prelim_grade < 0 or prelim_grade > 100:
-                raise ValueError("Prelim grade must be between 0 and 100.")
+            # Get the value entered by the user in the prelim grade input field
+            prelim_grade_str = Element('prelim_grade').element.value
+            
+            try:
+                # Convert the input value to a floating-point number
+                prelim_grade = float(prelim_grade_str)
+                
+                # Check if the grade is outside the valid range (0-100)
+                if prelim_grade < 0 or prelim_grade > 100:
+                    raise ValueError("Prelim grade must be between 0 and 100.")
     
-            prelim_contribution = 0.20 * prelim_grade
-            max_midterm_final = 0.30 + 0.50
+                # Calculate prelim contribution (20%) and the combined weight of midterm and final (30% + 50%)
+                prelim_contribution = 0.20 * prelim_grade
+                max_midterm_final = 0.30 + 0.50
     
-            result = ""
+                result = ""  # Initialize result string to store output message
     
-            if prelim_contribution + max_midterm_final * 100 < 75:
-                result = "Sorry, but it is impossible for you to pass the course with your current Prelim grade."
-            else:
-                remaining_for_midterm_final = 75 - prelim_contribution
-                required_midterm = remaining_for_midterm_final / max_midterm_final
-                required_final = required_midterm 
-    
-                result = f"If your prelim grade is {prelim_grade:.2f} and you want to pass the course with an overall grade of 75, you need at least:<br><br>"
-                result += f"Midterm grade: {required_midterm:.2f}<br>"
-                result += f"Final grade: {required_final:.2f}<br><br>"
-    
-                remaining_for_midterm_final1 = 90 - prelim_contribution
-                required_midterm1 = remaining_for_midterm_final1 / max_midterm_final
-                required_final1 = required_midterm1 
-    
-                if required_midterm1 > 100 or required_final1 > 100:
-                    result += "Sorry, but it is not possible for you to achieve Dean's lister at all even if you ace your midterms and finals. Better luck next time."
-                elif prelim_contribution + max_midterm_final * 100 >= 90:
-                    result += "Congratulations! You've qualified for Dean's lister.<br><br>"
-                    result += f"Now, you only need to have a midterm grade of {required_midterm1:.2f} and a final grade of {required_final1:.2f}"
+                # Check if it's impossible to pass the course with the current prelim grade
+                if prelim_contribution + max_midterm_final * 100 < 75:
+                    result = "Sorry, but it is impossible for you to pass the course with your current Prelim grade."
                 else:
-                    result += "If you want to become a Dean's lister, you need at least:<br>"
-                    result += f"Midterm grade: {required_midterm1:.2f}<br>"
-                    result += f"Final grade: {required_final1:.2f}"
+                    # Calculate the required midterm and final grades to pass with a 75 overall grade
+                    remaining_for_midterm_final = 75 - prelim_contribution
+                    required_midterm = remaining_for_midterm_final / max_midterm_final
+                    required_final = required_midterm 
     
+                    # Display the required midterm and final grades to pass
+                    result = f"If your prelim grade is {prelim_grade:.2f} and you want to pass the course with an overall grade of 75, you need at least:<br><br>"
+                    result += f"Midterm grade: {required_midterm:.2f}<br>"
+                    result += f"Final grade: {required_final:.2f}<br><br>"
+    
+                    # Additional check for Dean's lister qualification (requires a grade of 90 or higher)
+                    remaining_for_midterm_final1 = 90 - prelim_contribution
+                    required_midterm1 = remaining_for_midterm_final1 / max_midterm_final
+                    required_final1 = required_midterm1 
+    
+                    # If the prelim grade is less than 60, it's impossible to qualify for Dean's lister
+                    if prelim_grade < 60:
+                        result += "Sorry, but it is not possible for you to achieve Dean's lister at all even if you ace your midterms and finals. Better luck next time."
+                    # If prelim + other grades total >= 90, the student qualifies for Dean's lister
+                    elif prelim_contribution + max_midterm_final * 100 >= 90:
+                        result += "Congratulations! You've qualified for Dean's lister.<br><br>"
+                        result += f"Now, you only need to have a midterm grade of {required_midterm1:.2f} and a final grade of {required_final1:.2f}"
+                    else:
+                        # Display the required midterm and final grades to qualify for Dean's lister
+                        result += "If you want to become a Dean's lister, you need at least:<br>"
+                        result += f"Midterm grade: {required_midterm1:.2f}<br>"
+                        result += f"Final grade: {required_final1:.2f}"
+    
+            # Handle invalid input (non-numerical or out-of-range)
+            except ValueError:
+                result = '<span style="color: red;">Invalid input. Please enter a numerical grade between 0 and 100.</span>'
+            
+            # Display the result in the "result" div
             result_element = Element('result')
             result_element.element.innerHTML = result
             result_element.element.style.display = "block"
     
-        except ValueError:
-            result_element = Element('result')
-            result_element.element.innerHTML = '<span style="color: red;">Invalid input. Please enter a numerical grade between 0 and 100.</span>'
-            result_element.element.style.display = "block"
+        # This function sets up the form's submit event to trigger the grade calculation function
+        def setup():
+            Element('gradeForm').element.onsubmit = calculate_grades
     
-    def setup():
-        Element('gradeForm').element.onsubmit = calculate_grades
-    
-    setup()
-    
+        # Initialize the event listener for the form when the script runs
+        setup()
     </py-script>
 </body>
 </html>
+<!-- Credits to ChatGPT and Cody AI from Sourecegraph. Without these two, I wouldn't be able to finish this task. https://chatgpt.com/ & https://sourcegraph.com/cody/chat?signup=OpenIDConnect  -->
