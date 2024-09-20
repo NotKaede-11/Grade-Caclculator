@@ -152,8 +152,8 @@
                     required_midterm1 = remaining_for_midterm_final1 / max_midterm_final
                     required_final1 = required_midterm1 
     
-                    # If the prelim grade is less than 60, it's impossible to qualify for Dean's lister
-                    if prelim_grade < 60:
+                    # If the prelim grade is less than 70, it's impossible to qualify for Dean's lister
+                    if prelim_grade < 70:
                         result += "Sorry, but it is not possible for you to achieve Dean's lister at all even if you ace your midterms and finals. Better luck next time."
                     # If prelim + other grades total >= 90, the student qualifies for Dean's lister
                     elif prelim_contribution + max_midterm_final * 100 >= 90:
